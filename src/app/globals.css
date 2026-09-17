@@ -1,1 +1,41 @@
-body{margin:0;background:#050505;font-family:Arial;color:white;}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+ --green:#a8ff00;
+ --bg:#050909;
+}
+
+body{
+ margin:0;
+ background:var(--bg);
+ color:white;
+ font-family:Arial,sans-serif;
+}
+
+.section{
+ padding:70px 8%;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+ gap:25px;
+}
+
+.card{
+ background:#0b1214;
+ border:1px solid #202b2d;
+ border-radius:22px;
+ padding:25px;
+}
+
+.btn{
+ background:var(--green);
+ color:#050505;
+ border:0;
+ padding:15px 30px;
+ border-radius:30px;
+ font-weight:bold;
+}
