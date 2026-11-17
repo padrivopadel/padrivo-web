@@ -23,7 +23,7 @@ export default function Navbar() {
         </button>
         <div id="primary-links" className={`nav-links ${open ? "is-open" : ""}`}>
           {links.map(link => <a key={link.href} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
-          <a className="nav-cta" href="#comunidad" onClick={() => setOpen(false)}>Sumate a Padrivo <span aria-hidden="true">↗</span></a>
+          <a className="nav-cta" href="#comunidad" onClick={() => setOpen(false)}>Explorar comunidad <span aria-hidden="true">↗</span></a>
         </div>
       </nav>
     </header>
