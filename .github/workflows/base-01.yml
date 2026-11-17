@@ -1,7 +1,7 @@
-name: BASE-01 validation
+name: BASE-01 / UI-01 validation
 on:
   push:
-    branches: [chore/base-01-stabilization]
+    branches: [chore/base-01-stabilization, feat/ui-01-responsive]
   pull_request:
     branches: [main]
   workflow_dispatch:
