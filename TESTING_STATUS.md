@@ -36,3 +36,12 @@ Rama propuesta chore/base-01-stabilization desde e13126c. Intento de crear refer
 No se repitieron npm ci ni pruebas de red. Validacion visual pendiente: ejecutar npm run start tras build satisfactorio en entorno habilitado y revisar escritorio 1440px y movil 390px, estilos, consola y desbordamiento. Actions por si solo no acredita revision visual.
 Lista cerrada de cambios: src/app/globals.css, src/app/layout.js, README.md; nuevos .github/workflows/base-01.yml, PROJECT_CONTEXT.md, ARCHITECTURE.md, FEATURE_INVENTORY.md, DEVELOPMENT_ROADMAP.md, CHANGELOG.md, TESTING_STATUS.md, WORK_SESSION.md. No incluir caches, logs, ZIPs, node_modules, .next, .env ni cambios locales del padre.
 BASE-01 no completada hasta instalacion, lint, build y revision visual satisfactorios. Siguiente paso: aprobar crear rama remota y commit/push del conjunto cerrado, sin merge ni despliegue.
+
+## Actualizacion de resultados — 2026-11-17
+Las incidencias de instalacion de entornos anteriores se conservan arriba como historial; ya no representan el estado actual de validacion.
+- GitHub Actions del commit 65222efdb19be92bc9602a61d8416b52efd7a7aa: npm ci, lint y build aprobados.
+- PC del usuario: Node v24.13.0 y npm 11.6.2; npm ci finalizo correctamente; npm run dev inicio Next.js 16.3.5 y se abrio localhost:3000.
+- Revision visual: escritorio sin fallas evidentes en la porcion capturada; movil 390 px revisado mediante capturas de la pagina. Tarjetas, ranking y pie de pagina legibles, sin desbordamiento horizontal evidente. Observaciones: navegacion movil ocupa varias lineas, titular principal muy alto y espacios verticales amplios.
+- No se verifico formalmente la consola ni se acredito una captura de escritorio exactamente a 1440 px; no afirmar esas comprobaciones.
+- Seguridad: npm reporto 11 vulnerabilidades (7 moderadas, 3 altas, 1 critica). Sin auditoria de detalle ni correccion automatica.
+- Estado BASE-01: validacion tecnica aprobada; revision visual completada con observaciones pendientes para UI-01. No fusionada a main.
