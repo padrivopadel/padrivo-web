@@ -1,0 +1,7 @@
+# Arquitectura
+Actual: Next.js 16.3.5 App Router, React 19.2.8, JavaScript, Tailwind 4.3.3 segun lockfile. Portada src/app/page.js y componentes src/components. Sin integracion Supabase en el commit base.
+BASE-01 importa theme.css y utilities.css con capas de Tailwind 4. Se omite Preflight para conservar los estilos predeterminados del navegador de la portada existente; no es un rediseno.
+Propuesta no implementada: clientes Supabase de navegador y servidor, @supabase/ssr, cookies, proxy para renovacion, autorizacion en cada operacion y RLS. Clave publicable en cliente; ninguna service_role publica. No cache compartida para datos privados.
+Auditoria previa de solo lectura: 12 tablas public con RLS: profiles, player_profiles, organizers, clubs, tournaments, tournament_categories, registrations, teams, matches, ranking, payments, notifications. Sin buckets ni migraciones registradas en la consulta realizada. Dos funciones y triggers de perfiles.
+Pendientes criticos: lectura amplia de perfiles con email/telefono; rol editable y tomado de user_metadata; estadisticas editables por jugador; creacion de torneos sin verificacion de organizador; search_path de set_profile_email; grants amplios. No se probaron exploits ni se consultaron registros personales.
+RLS UPDATE sin WITH CHECK explicito no significa ausencia automatica de control: PostgreSQL puede reutilizar USING. Las correcciones deben basarse en permisos efectivos, no solo en esa ausencia.
