@@ -28,3 +28,13 @@ Rama propuesta chore/base-01-stabilization desde e13126c. Intento de crear refer
 No se repitieron npm ci ni pruebas de red. Validacion visual pendiente: ejecutar npm run start tras build satisfactorio en entorno habilitado y revisar escritorio 1440px y movil 390px, estilos, consola y desbordamiento. Actions por si solo no acredita revision visual.
 Lista cerrada de cambios: src/app/globals.css, src/app/layout.js, README.md; nuevos .github/workflows/base-01.yml, PROJECT_CONTEXT.md, ARCHITECTURE.md, FEATURE_INVENTORY.md, DEVELOPMENT_ROADMAP.md, CHANGELOG.md, TESTING_STATUS.md, WORK_SESSION.md. No incluir caches, logs, ZIPs, node_modules, .next, .env ni cambios locales del padre.
 BASE-01 no completada hasta instalacion, lint, build y revision visual satisfactorios. Siguiente paso: aprobar crear rama remota y commit/push del conjunto cerrado, sin merge ni despliegue.
+
+## Cierre de seguimiento BASE-01 — 2026-11-17
+- Rama remota: chore/base-01-stabilization. Commit de implementacion: 65222efdb19be92bc9602a61d8416b52efd7a7aa.
+- GitHub Actions: npm ci, lint y build aprobados para ese commit.
+- Validacion local del usuario: Node 24.13.0, npm 11.6.2, npm ci completo y servidor Next.js 16.3.5 iniciado correctamente.
+- Revision visual: escritorio inspeccionado en captura; movil 390 px inspeccionado a lo largo de la pagina. No se observaron desbordamientos horizontales evidentes; encabezado movil, escala del titulo y espaciados requieren mejoras.
+- npm reporto 11 alertas de dependencias (7 moderadas, 3 altas, 1 critica); no se ejecuto npm audit fix. Pendiente evaluacion de seguridad.
+- Estado: estabilizacion tecnica validada; revision visual realizada con observaciones abiertas. No declarar aprobacion visual sin reservas.
+- Siguiente tarea propuesta: UI-01, en rama independiente, para menu movil, titulo, espaciados y lang=es. Pendiente implementacion y autorizacion especifica.
+- Sin merge a main, cambios de Supabase ni despliegue de produccion.
