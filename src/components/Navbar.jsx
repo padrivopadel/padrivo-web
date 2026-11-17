@@ -1,31 +1,4 @@
 "use client";
 import { useState } from "react";
-
-const links = [
-  { label: "Torneos", href: "#torneos" },
-  { label: "Cómo funciona", href: "#como-funciona" },
-  { label: "Organizadores", href: "#organizadores" },
-  { label: "Ranking", href: "#ranking" },
-  { label: "Comunidad", href: "#comunidad" },
-];
-
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  return (
-    <header className="site-header">
-      <nav className="nav-shell container" aria-label="Navegación principal">
-        <a href="#inicio" className="brand" onClick={() => setOpen(false)} aria-label="Padrivo Pádel, inicio">
-          <span className="brand-symbol" aria-hidden="true">◢</span>
-          <span>PADRIVO<span className="brand-sub">PÁDEL</span></span>
-        </a>
-        <button className="menu-toggle" type="button" aria-label={open ? "Cerrar menú" : "Abrir menú"} aria-expanded={open} aria-controls="primary-links" onClick={() => setOpen(!open)}>
-          <span></span><span></span><span></span>
-        </button>
-        <div id="primary-links" className={`nav-links ${open ? "is-open" : ""}`}>
-          {links.map(link => <a key={link.href} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
-          <a className="nav-cta" href="#comunidad" onClick={() => setOpen(false)}>Explorar comunidad <span aria-hidden="true">↗</span></a>
-        </div>
-      </nav>
-    </header>
-  );
-}
+const links=[["Torneos","#torneos"],["Cómo funciona","#como-funciona"],["Organizadores","#organizadores"],["Ranking","#ranking"],["Comunidad","#comunidad"]];
+export default function Navbar(){const [open,setOpen]=useState(false);return <header className="site-header"><nav className="nav-shell container" aria-label="Navegación principal"><a className="brand brand-new" href="#inicio" onClick={()=>setOpen(false)} aria-label="Padrivo Pádel, inicio"><svg className="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 49 27 16c8-11 26-11 30 2 4 14-10 26-27 24L17 57l4-22 18-17" fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/><circle cx="43" cy="23" r="6" fill="currentColor"/></svg><span className="brand-word">PADRIVO<small>PÁDEL</small></span></a><button className="menu-toggle" type="button" aria-label={open?"Cerrar menú":"Abrir menú"} aria-expanded={open} aria-controls="primary-links" onClick={()=>setOpen(!open)}><span/><span/><span/></button><div id="primary-links" className={`nav-links ${open?"is-open":""}`}>{links.map(([label,href])=><a key={href} href={href} onClick={()=>setOpen(false)}>{label}</a>)}<a className="nav-cta" href="#torneos" onClick={()=>setOpen(false)}>Explorar torneos <span aria-hidden="true">↗</span></a></div></nav></header>}
