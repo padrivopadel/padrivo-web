@@ -50,3 +50,6 @@ Asesor de seguridad: `auth_leaked_password_protection` desactivado. Habilitar tr
 - https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
 
 Estado: documento de diagnóstico. Ninguna corrección aplicada en Supabase.
+
+## Continuación SEC-01 — 2026-11-18
+Preparación de SQL autorizada en esta sesión, sin permiso de producción. Ver [paquete y resultados](SEC-01-IMPLEMENTATION.md). Borrador, pruebas y reversión guardados; ejecución pendiente de entorno aislado. Metadatos puntuales confirman ausencia de FK en las cuatro tablas, grants amplios de tabla y rol inicial desde metadata. Decisiones sobre identificador de organizador, verificación y superficie pública pendientes. No se consultaron datos personales ni se aplicaron correcciones.

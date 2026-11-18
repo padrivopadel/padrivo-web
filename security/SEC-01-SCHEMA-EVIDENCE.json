@@ -1,0 +1,998 @@
+{
+  "date": "2026-11-18",
+  "scope": "targeted metadata only; not restorable baseline",
+  "functions": [
+    "CREATE OR REPLACE FUNCTION public.handle_new_user()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\nbegin\r\n\r\n  insert into public.profiles\r\n  (\r\n    id,\r\n    nombre,\r\n    apellido,\r\n    telefono,\r\n    ciudad,\r\n    rol,\r\n    email\r\n  )\r\n\r\n  values\r\n  (\r\n    new.id,\r\n    coalesce(new.raw_user_meta_data->>'nombre',''),\r\n    coalesce(new.raw_user_meta_data->>'apellido',''),\r\n    coalesce(new.raw_user_meta_data->>'telefono',''),\r\n    coalesce(new.raw_user_meta_data->>'ciudad',''),\r\n    coalesce(new.raw_user_meta_data->>'rol','jugador'),\r\n    new.email\r\n  );\r\n\r\n  return new;\r\n\r\nend;\r\n$function$\n",
+    "CREATE OR REPLACE FUNCTION public.set_profile_email()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\r\nBEGIN\r\n  IF NEW.email IS NULL THEN\r\n    SELECT email INTO NEW.email FROM auth.users WHERE id = NEW.id;\r\n  END IF;\r\n  RETURN NEW;\r\nEND;\r\n$function$\n"
+  ],
+  "columns": [
+    {
+      "data_type": "uuid",
+      "table_name": "organizers",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "organizers",
+      "column_name": "user_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "organizers",
+      "column_name": "nombre",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "organizers",
+      "column_name": "telefono",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "organizers",
+      "column_name": "descripcion",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "organizers",
+      "column_name": "verificado",
+      "is_nullable": "YES",
+      "column_default": "false"
+    },
+    {
+      "data_type": "timestamp without time zone",
+      "table_name": "organizers",
+      "column_name": "created_at",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "player_profiles",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "player_profiles",
+      "column_name": "user_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "player_profiles",
+      "column_name": "categoria",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "player_profiles",
+      "column_name": "nivel",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "bigint",
+      "table_name": "player_profiles",
+      "column_name": "partidos",
+      "is_nullable": "YES",
+      "column_default": "'0'::bigint"
+    },
+    {
+      "data_type": "bigint",
+      "table_name": "player_profiles",
+      "column_name": "victorias",
+      "is_nullable": "YES",
+      "column_default": "'0'::bigint"
+    },
+    {
+      "data_type": "bigint",
+      "table_name": "player_profiles",
+      "column_name": "derrotas",
+      "is_nullable": "YES",
+      "column_default": "'0'::bigint"
+    },
+    {
+      "data_type": "bigint",
+      "table_name": "player_profiles",
+      "column_name": "puntos_ranking",
+      "is_nullable": "YES",
+      "column_default": "'0'::bigint"
+    },
+    {
+      "data_type": "timestamp without time zone",
+      "table_name": "player_profiles",
+      "column_name": "created_at",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "profiles",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "nombre",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "apellido",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "telefono",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "ciudad",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "rol",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "foto",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp without time zone",
+      "table_name": "profiles",
+      "column_name": "created_at",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "email",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "tournaments",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "tournaments",
+      "column_name": "organizer_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "nombre",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "descripcion",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "club",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "ciudad",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "date",
+      "table_name": "tournaments",
+      "column_name": "fecha_inicio",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "date",
+      "table_name": "tournaments",
+      "column_name": "fecha_fin",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "categoria",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "modalidad",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "bigint",
+      "table_name": "tournaments",
+      "column_name": "cupos",
+      "is_nullable": "YES",
+      "column_default": "'0'::bigint"
+    },
+    {
+      "data_type": "bigint",
+      "table_name": "tournaments",
+      "column_name": "inscriptos",
+      "is_nullable": "YES",
+      "column_default": "'0'::bigint"
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "estado",
+      "is_nullable": "YES",
+      "column_default": "'abierto'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "imagen",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "tournaments",
+      "column_name": "premios",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp without time zone",
+      "table_name": "tournaments",
+      "column_name": "created_at",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "tournaments",
+      "column_name": "inscritos",
+      "is_nullable": "YES",
+      "column_default": "0"
+    }
+  ],
+  "policies": [
+    {
+      "cmd": "SELECT",
+      "qual": "true",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "organizers",
+      "permissive": "PERMISSIVE",
+      "policyname": "organizers_read",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "player_profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "player_profiles_insert",
+      "schemaname": "public",
+      "with_check": "(auth.uid() = user_id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "true",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "player_profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "player_profiles_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(auth.uid() = user_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "player_profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "player_profiles_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "true",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_select",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(auth.uid() = id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "profiles_update",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "tournaments",
+      "permissive": "PERMISSIVE",
+      "policyname": "organizers_create_tournaments",
+      "schemaname": "public",
+      "with_check": "(auth.uid() = organizer_id)"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(auth.uid() = organizer_id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "tournaments",
+      "permissive": "PERMISSIVE",
+      "policyname": "organizers_update_tournaments",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "true",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "tournaments",
+      "permissive": "PERMISSIVE",
+      "policyname": "tournaments_public_read",
+      "schemaname": "public",
+      "with_check": null
+    }
+  ],
+  "constraints": [
+    {
+      "table": "profiles",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "player_profiles",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "tournaments",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "organizers",
+      "definition": "PRIMARY KEY (id)"
+    }
+  ],
+  "triggers": [
+    "CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION handle_new_user()",
+    "CREATE TRIGGER trg_set_profile_email BEFORE INSERT ON public.profiles FOR EACH ROW EXECUTE FUNCTION set_profile_email()"
+  ],
+  "clientTableGrants": [
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "player_profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "tournaments",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "anon",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "DELETE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRUNCATE",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "REFERENCES",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "organizers",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "TRIGGER",
+      "with_hierarchy": "NO"
+    }
+  ]
+}

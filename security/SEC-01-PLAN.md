@@ -39,3 +39,6 @@ No aplicar revocaciones masivas ni reemplazar políticas en producción sin inve
 ## Límites de esta etapa
 
 Solo documentación en GitHub. **Sin migraciones, DDL, cambios de datos, secretos, merges a main ni despliegues.** Próximo paso: inspección de grants efectivos, función de perfiles, relaciones y modelo de permisos, y preparación de SQL de propuesta en una etapa posterior.
+
+## Continuación SEC-01 — 2026-11-18
+Preparación de SQL autorizada en esta sesión, sin permiso de producción. Ver [paquete y resultados](SEC-01-IMPLEMENTATION.md). Borrador, pruebas y reversión guardados; ejecución pendiente de entorno aislado. Metadatos puntuales confirman ausencia de FK en las cuatro tablas, grants amplios de tabla y rol inicial desde metadata. Decisiones sobre identificador de organizador, verificación y superficie pública pendientes. No se consultaron datos personales ni se aplicaron correcciones.
