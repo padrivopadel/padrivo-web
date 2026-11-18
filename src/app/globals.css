@@ -516,3 +516,194 @@ body{background:#070d0b}
 .registro-form [role="status"] {
   line-height: 1.5;
 }
+
+/* AUTH-04: panel privado del jugador */
+
+.jugador-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 13px 22px;
+  background: #15221b;
+  color: #f7faf7;
+  border: 1px solid #7da64e;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.jugador-logout:hover {
+  background: #223629;
+  border-color: var(--green);
+}
+
+.jugador-logout:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* =========================================================
+   AUTH-04 — DASHBOARD DE JUGADORES
+   ========================================================= */
+
+.jugador-dashboard {
+  min-height: 75vh;
+}
+
+.jugador-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 48px;
+}
+
+.jugador-header h1 {
+  font-size: clamp(36px, 4.5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1.1;
+  margin: 18px 0;
+}
+
+.jugador-header > div:first-child > p:last-child {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.jugador-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.jugador-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 350px;
+  padding: 30px;
+  background: linear-gradient(145deg, #16241d, #0d1612);
+  border: 1px solid #34483a;
+  border-radius: 14px;
+}
+
+.jugador-card-label {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.jugador-card h2 {
+  font-size: 27px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin: 18px 0 24px;
+}
+
+.jugador-card h3 {
+  font-size: 19px;
+  line-height: 1.3;
+  margin: 14px 0 10px;
+}
+
+.jugador-card > p {
+  color: #b5c4b9;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.jugador-card-profile {
+  background: linear-gradient(150deg, #1c3524, #0e1b14);
+  border-color: #527043;
+}
+
+.jugador-avatar {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #0b160b;
+  font-size: 30px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+.jugador-profile-name {
+  color: #fff !important;
+  font-size: 20px !important;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.jugador-profile-email {
+  overflow-wrap: anywhere;
+  margin: 0 0 22px;
+}
+
+.jugador-role {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 9px 14px;
+  border: 1px solid #729d4a;
+  border-radius: 30px;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.jugador-card-symbol {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid #56754b;
+  border-radius: 14px;
+  color: var(--green);
+  font-size: 38px;
+}
+
+.jugador-coming-soon {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 25px;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+@media (max-width: 1000px) {
+  .jugador-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .jugador-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .jugador-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jugador-card {
+    min-height: 300px;
+    padding: 24px;
+  }
+
+  .jugador-header h1 {
+    font-size: 38px;
+  }
+}
