@@ -1,35 +1,37 @@
 # SEC-01 — Decisión aprobada: organizadores verificados
 
-Fecha: 2026-11-18. Estado: **decisión funcional confirmada; implementación pendiente de pruebas de integración**.
+Fecha: 2026-11-18. Estado: **regla funcional confirmada; pruebas locales de RLS realizadas; flujo administrativo aún no implementado**.
 
-## Regla aprobada por el propietario
+## Reglas aprobadas
 
-Solo un organizador **registrado y verificado** puede crear o modificar torneos en PADRIVO PÁDEL. Registrarse no otorga verificación; el usuario no puede verificarse a sí mismo. Revocar la verificación debe bloquear nuevas escrituras del organizador.
+1. Solo un organizador registrado y verificado puede crear o modificar sus torneos.
+2. Un usuario autenticado puede solicitar el alta de su propio organizador, inicialmente `verificado=false`. No puede solicitar en nombre de otro usuario, duplicar su solicitud ni verificarse.
+3. **Solo administradores autorizados de PADRIVO PÁDEL** podrán aprobar, rechazar o revocar la verificación. El administrador debe autenticarse; la autorización debe comprobarse en el backend/base de datos, no únicamente en el frontend.
+4. La revocación debe bloquear inmediatamente nuevas escrituras de torneos por parte del organizador.
+5. Registrar, aprobar, rechazar y revocar son acciones distintas. Se debe auditar actor, momento, objetivo y motivo para decisiones administrativas.
 
-## Contrato de autorización propuesto
+## Requisitos de implementación
 
-1. **Solicitud de organizador:** usuario autenticado solicita alta vinculada a su `auth.uid()`. Estado inicial `verificado=false`. Nunca se acepta `verificado`, `user_id` arbitrario o `rol` del cuerpo de una petición para elevar privilegios.
-2. **Aprobación/revocación:** exclusivamente operador confiable desde backend o procedimiento administrativo autenticado fuera del cliente público. No exponer `service_role` ni claves secretas en frontend. Auditar quién, cuándo y por qué aprueba o revoca.
-3. **Torneos:** las políticas RLS de INSERT y UPDATE exigen existencia de organizador vinculado al usuario y `verificado IS TRUE`. Deben comprobar propiedad y evitar transferir `organizer_id`.
-4. **Rol de cuenta:** todas las altas nuevas empiezan con `profiles.rol='jugador'`, incluso si solicitan `raw_user_meta_data.rol='administrador'`. El rol no es una fuente de autorización confiable si el cliente puede escribirlo.
-5. **Registros existentes:** no alterar automáticamente roles o torneos previos. Revisar asignaciones con operador confiable y preservar datos.
+- Nunca confiar en `raw_user_meta_data` para roles ni permitir que el usuario escriba `profiles.rol`.
+- No exponer `service_role` ni claves secretas al navegador.
+- Comprobar que la identidad administrativa se determina con una fuente protegida y verificable. No basta con `rol` en el JWT si no está protegido o actualizado.
+- Proteger `organizers.verificado`, `organizers.user_id` y la propiedad de `tournaments.organizer_id` con permisos de columna, RLS y backend.
+- Definir un estado de rechazo y reintento sin permitir que un usuario restablezca su verificación.
+- Revisar compatibilidad con torneos históricos: producción tiene dos torneos y cero organizadores; no reasignarlos ni borrarlos automáticamente.
 
-## Bloqueos concretos detectados en producción (solo consultas de lectura)
+## Evidencia de pruebas locales reportadas por usuario
 
-- RLS habilitado en las cuatro tablas; nueve políticas existentes.
-- `anon` aún puede ejecutar `public.handle_new_user()`; `authenticated` aún puede modificar `profiles.rol` y `player_profiles.puntos_ranking`.
-- Hay **0 registros en organizers**, **2 torneos** y **1 perfil con rol distinto de jugador**. Ninguno de los dos torneos coincide hoy con `organizers.id` o `organizers.user_id`; **no inferir el significado de organizer_id** sin revisar el contrato de la aplicación.
-- Aplicar ahora el candidato bloquearía la creación/modificación de torneos hasta disponer de un flujo de aprobación y de organizadores verificados.
+- Usuario ficticio pudo crear solicitud propia con `verificado=false` y no pudo crearla para otro usuario.
+- Índice único impidió duplicar la solicitud.
+- Intento de actualizar `verificado` como `authenticated` devolvió `permission denied`.
+- RLS rechazó creación de torneo sin verificación y permitió crear torneo con verificación.
+- RLS permitió editar torneo propio mientras estaba verificado y devolvió `UPDATE 0` tras revocación.
+- Las pruebas se hicieron en Supabase local con transacciones y `ROLLBACK` cuando correspondía. **No equivalen a pruebas completas mediante Auth/API ni autorizan despliegue a producción.**
 
-## Secuencia para completar SEC-01
+## Pendientes antes de producción
 
-1. Confirmar mediante esquema y código que `tournaments.organizer_id` referencia el identificador del usuario (no el PK de `organizers`). Ajustar el modelo si es necesario, con migración compatible para torneos existentes.
-2. Diseñar el alta segura de organizador: solicitud limitada al propio usuario, campos permitidos, `verificado=false` impuesto por servidor/default y protección de columnas.
-3. Diseñar aprobación/revocación administrativa con control de identidad y registro de auditoría. No permitir actualizaciones directas a `verificado` desde `authenticated`.
-4. Probar en Supabase local aislado con usuarios ficticios: solicitante, no verificado, verificado, revocado y usuario ajeno. Incluir altas reales por Auth, RLS, grants de columnas, torneo existente y rollback.
-5. Revisar compatibilidad de perfiles privados y directorio público, y aprobar contrato separado para datos visibles.
-6. Preparar migración versionada, respaldo de esquema/ACL, revisión de diferencias y plan de reversión segura. Aplicar a producción solo después de superar estas verificaciones y aprobar el despliegue.
-
-## Límites de esta aprobación
-
-La confirmación autoriza la **regla de negocio**, no implica que la migración esté validada ni autoriza por sí sola cambios directos de producción. Los scripts `security/sql/SEC-01-migration.sql` y `security/sql/SEC-01-candidate.sql` siguen sujetos a pruebas y revisión. No se crearon servicios con costo ni se ejecutó DDL de producción en esta etapa.
+1. Inspeccionar código de autenticación y administración actual para diseñar autorización administrativa segura.
+2. Implementar flujo de aprobación/rechazo/revocación y auditoría; probar roles administrativos reales y negativos.
+3. Resolver el contrato de `tournaments.organizer_id` y la migración de los dos torneos existentes.
+4. Probar el flujo completo con Supabase Auth/API en ambiente aislado, revisión de rollback y asesores de seguridad.
+5. Revisar la migración final y solicitar autorización expresa antes de tocar producción.
